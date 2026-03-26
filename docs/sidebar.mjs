@@ -26,7 +26,7 @@ const apiReference = {
 
 const sidebar = [
   {
-    label: 'go-cli-template',
+    label: 'brighten',
     link: '/',
   },
   {
@@ -36,7 +36,7 @@ const sidebar = [
   {
     label: 'Commands',
     items: [
-      { label: 'go-cli-template', link: '/commands/go-cli-template' },
+      { label: 'brighten', link: '/commands/brighten' },
             { label: 'completion', link: '/commands/completion' },
             { label: 'config', link: '/commands/config' },
             { label: 'config init', link: '/commands/config-init' },
@@ -50,7 +50,7 @@ const sidebar = [
 
 // Add API Reference if not in production or if this is go-cli-template
 const isProduction = process.env.NODE_ENV === 'production';
-const projectName = 'go-cli-template';
+const projectName = 'brighten';
 if (!isProduction || projectName === 'go-cli-template') {
   sidebar.push(apiReference);
 }

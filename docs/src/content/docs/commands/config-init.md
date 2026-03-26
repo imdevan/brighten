@@ -8,7 +8,7 @@ Generate a default config file
 ## Usage
 
 ```bash
-go-cli-template init
+brighten init
 ```
 
 ## Flags
@@ -20,4 +20,4 @@ go-cli-template init
 
 ## Source
 
-See [config_init.go](https://github.com/imdevan/go-cli-template//blob/main/cmd/go-cli-template/config_init.go) for implementation details.
+See [config_init.go](https://github.com/imdevan/brighten//blob/main/cmd/brighten/config_init.go) for implementation details.

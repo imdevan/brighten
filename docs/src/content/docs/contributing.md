@@ -1,6 +1,6 @@
 ---
 title: Contributing
-description: Contributing to go-cli-template
+description: Contributing to brighten
 ---
 
 

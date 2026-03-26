@@ -1,6 +1,6 @@
 ---
 title: Install
-description: Installation instructions for go-cli-template
+description: Installation instructions for brighten
 ---
 
 

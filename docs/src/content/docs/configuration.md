@@ -1,6 +1,6 @@
 ---
 title: Configuration
-description: Configuration options for go-cli-template
+description: Configuration options for brighten
 ---
 
 
