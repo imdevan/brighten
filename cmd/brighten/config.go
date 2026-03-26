@@ -6,10 +6,10 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"go-cli-template/internal/adapters/editor"
-	"go-cli-template/internal/config"
-	"go-cli-template/internal/domain"
-	"go-cli-template/internal/utils"
+	"brighten/internal/adapters/editor"
+	"brighten/internal/config"
+	"brighten/internal/domain"
+	"brighten/internal/utils"
 )
 
 func newConfigCmd() *cobra.Command {
