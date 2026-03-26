@@ -233,3 +233,116 @@ func TestRunBrighten_HSLAAlphaPreserved(t *testing.T) {
 		t.Errorf("alpha not preserved in hsla output: %q", out)
 	}
 }
+
+// --- plan.md colors: #f2ebe8 variants ---
+
+func TestRunBrighten_AutoBrighten(t *testing.T) {
+	// r=242 is max; new_g=int(235*255/242)=247=0xf7, new_b=int(232*255/242)=244=0xf4
+	out := captureStdout(func() { runBrighten("#f2ebe8", "") })
+	if !strings.Contains(out, "#fff7f4") {
+		t.Errorf("unexpected output: %q", out)
+	}
+}
+
+func TestRunBrighten_Uppercase(t *testing.T) {
+	// uppercase hex letters should parse identically
+	out := captureStdout(func() { runBrighten("#F2EBE8", "") })
+	if !strings.Contains(out, "#fff7f4") {
+		t.Errorf("uppercase hex: unexpected output: %q", out)
+	}
+}
+
+func TestRunBrighten_NoHashLower(t *testing.T) {
+	out := captureStdout(func() { runBrighten("f2ebe8", "") })
+	if !strings.Contains(out, "#fff7f4") {
+		t.Errorf("no-hash lowercase: unexpected output: %q", out)
+	}
+}
+
+func TestRunBrighten_NoHashUpper(t *testing.T) {
+	out := captureStdout(func() { runBrighten("F2EBE8", "") })
+	if !strings.Contains(out, "#fff7f4") {
+		t.Errorf("no-hash uppercase: unexpected output: %q", out)
+	}
+}
+
+func TestRunBrighten_AutoDarken(t *testing.T) {
+	// min=b=232; new_r=255-13*255/23=111=0x6f, new_g=255-20*255/23=34=0x22, new_b=0
+	out := captureStdout(func() { runBrighten("#f2ebe8", "-") })
+	if !strings.Contains(out, "#6f2200") {
+		t.Errorf("unexpected auto-darken output: %q", out)
+	}
+}
+
+func TestRunBrighten_BrightenByValue(t *testing.T) {
+	// r=242+10=252=0xfc, g=235+10=245=0xf5, b=232+10=242=0xf2
+	out := captureStdout(func() { runBrighten("#f2ebe8", "10") })
+	if !strings.Contains(out, "#fcf5f2") {
+		t.Errorf("unexpected brighten-by-value output: %q", out)
+	}
+}
+
+func TestRunBrighten_DarkenByValue(t *testing.T) {
+	// r=242-10=232=0xe8, g=235-10=225=0xe1, b=232-10=222=0xde
+	out := captureStdout(func() { runBrighten("#f2ebe8", "-10") })
+	if !strings.Contains(out, "#e8e1de") {
+		t.Errorf("unexpected darken-by-value output: %q", out)
+	}
+}
+
+// --- hex with alpha ---
+
+func TestRunBrighten_HexAlphaPreservedInOld(t *testing.T) {
+	// alpha appended to old color only (matches bash script behavior)
+	out := captureStdout(func() { runBrighten("#f2ebe8ff", "10") })
+	if !strings.Contains(out, "#f2ebe8ff") {
+		t.Errorf("alpha not preserved in old hex color: %q", out)
+	}
+	if !strings.Contains(out, "#fcf5f2") {
+		t.Errorf("unexpected new hex color: %q", out)
+	}
+}
+
+// --- negative integer brightness ---
+
+func TestRunBrighten_HexNegativeInteger(t *testing.T) {
+	// #808080 - 64 -> 64=0x40
+	out := captureStdout(func() { runBrighten("#808080", "-64") })
+	if !strings.Contains(out, "#404040") {
+		t.Errorf("unexpected negative integer output: %q", out)
+	}
+}
+
+// --- rgb: missing brightness modes ---
+
+func TestRunBrighten_RGBAutoDarken(t *testing.T) {
+	// rgb(64, 128, 192): min=r=64
+	// new_g=255-127*255/191=86, new_b=255-63*255/191=171, new_r=0
+	out := captureStdout(func() { runBrighten("rgb(64, 128, 192)", "-") })
+	if !strings.Contains(out, "rgb(0, 86, 171)") {
+		t.Errorf("unexpected rgb auto-darken output: %q", out)
+	}
+}
+
+func TestRunBrighten_RGBPercent(t *testing.T) {
+	// rgb(100, 100, 100) + 50% -> 150
+	out := captureStdout(func() { runBrighten("rgb(100, 100, 100)", "50%") })
+	if !strings.Contains(out, "rgb(150, 150, 150)") {
+		t.Errorf("unexpected rgb percent output: %q", out)
+	}
+}
+
+func TestRunBrighten_RGBFraction(t *testing.T) {
+	// rgb(100, 100, 100) * 2.0 -> 200
+	out := captureStdout(func() { runBrighten("rgb(100, 100, 100)", "2.0") })
+	if !strings.Contains(out, "rgb(200, 200, 200)") {
+		t.Errorf("unexpected rgb fraction output: %q", out)
+	}
+}
+
+func TestRunBrighten_InvalidColor(t *testing.T) {
+	err := runBrighten("apple", "")
+	if err == nil || !strings.Contains(err.Error(), "Unsupported color format") {
+		t.Errorf("expected unsupported color error for 'apple', got: %v", err)
+	}
+}
