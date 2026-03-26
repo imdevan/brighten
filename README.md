@@ -1,6 +1,6 @@
 # go-cli-template
 
-Brghten (or darken) colors. Set the brightest color to white and scale remaining colors.
+Brighten (or darken) colors. Set the brightest color to white and scale remaining colors.
 
 ## Features
 
